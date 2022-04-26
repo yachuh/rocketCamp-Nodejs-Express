@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/post');
+const Post = require('../models/postsModel');
 const errorHandle = require('../errorHandle');
 
 // const headers = {
@@ -11,9 +11,7 @@ const errorHandle = require('../errorHandle');
 // };
 
 router.get('/', async function(req,res){
-    // const name = req.query.name;
     const posts = await Post.find();
-    // res.writeHead(200, headers);
     res.send({ // 會自動將物件轉為 JSON 字串
         "status":"success",
         posts
@@ -32,7 +30,7 @@ router.post('/',async function(req,res){
             );
             res.send({
                 "status":"success",
-                "data": newPost
+                "post": newPost
             });
         } else {
             errorHandle(res);
@@ -75,12 +73,13 @@ router.delete('/:id',async function(req,res){
 router.patch('/:id', async function(req,res){
     try{
         const id = req.params.id;
-        const data = req.body;
+        const name = req.body.name;
+        const content = req.body.content;
         const posts = await Post.find();
         const index = posts.findIndex(element => element.id === id);
         await Post.findByIdAndUpdate(id,{
-            "name": data.name,
-            "content": data.content
+            "name": name,
+            "content": content
         });
         await res.send({
             "status":"success",

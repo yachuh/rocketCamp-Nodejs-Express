@@ -6,7 +6,7 @@ var logger = require('morgan'); // 日誌
 
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Post = require('./models/post');
+const Post = require('./models/postsModel');
 const cors = require('cors');
 
 //載入環境變數
@@ -16,7 +16,7 @@ const DB = process.env.DATABASE.replace(
     process.env.DATABASE_PASSWORD
 );
 
-// 連接資料庫
+// Connect to Database
 mongoose.connect(DB)
 .then(() => {
     console.log('資料庫連接成功')
@@ -28,6 +28,7 @@ mongoose.connect(DB)
 
 // router 邏輯
 const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
 
 const app = express();
@@ -41,10 +42,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors()); // 使用 Express cors()
+app.use(cors()); // 使用 Express cors() 套件
 
 // 載入 router 邏輯
 app.use('/', indexRouter);
+app.use('/users',usersRouter);
 app.use('/posts',postsRouter);
 
 // catch 404 and forward to error handler
