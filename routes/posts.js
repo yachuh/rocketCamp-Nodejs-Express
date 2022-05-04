@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/postsModel');
+const User = require('../models/usersModel');
 const errorHandle = require('../errorHandle');
 
 // const headers = {
@@ -11,21 +12,28 @@ const errorHandle = require('../errorHandle');
 // };
 
 router.get('/', async function(req,res){
-    const posts = await Post.find();
+    const timeSort = req.query.timeSort == "asc" ? "createdAt":"-createdAt";
+    const q = req.query.q !== undefined ? {"content": new RegExp(req.query.q)} : {};
+    const posts = await Post.find(q).populate({
+        path:'user',
+        select:'name photo'
+    }).sort(timeSort);
     res.send({ // 會自動將物件轉為 JSON 字串
         "status":"success",
         posts
     });
 })
 
-router.post('/',async function(req,res){
+router.post('/:uuid',async function(req,res){
     try{
         const data = req.body;
+        const uuid = req.params.uuid;
         if(data.content !== undefined){
             const newPost = await Post.create(
                 {
-                    name: data.name,
-                    content: data.content
+                    user: uuid,
+                    content: data.content,
+                    image: data.image
                 }
             );
             res.send({

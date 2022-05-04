@@ -7,6 +7,7 @@ var logger = require('morgan'); // 日誌
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Post = require('./models/postsModel');
+const User = require('./models/usersModel');
 const cors = require('cors');
 
 //載入環境變數
@@ -17,6 +18,14 @@ const DB = process.env.DATABASE.replace(
 );
 
 // Connect to Database
+// mongoose.connect('mongodb://localhost:27017/test')
+// .then(() => {
+//     console.log('資料庫連接成功')
+// })
+// .catch((err) => {
+//     console.log(err)
+// }); 
+
 mongoose.connect(DB)
 .then(() => {
     console.log('資料庫連接成功')

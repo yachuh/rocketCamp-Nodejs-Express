@@ -8,7 +8,7 @@ function errorHandle(res) {
     // res.writeHead(400,headers);
     res.send({
     "status": "false",
-    "message": "欄位未填寫正確，或無此 todo ID",
+    "message": "欄位未填寫正確",
     });
 }
 
